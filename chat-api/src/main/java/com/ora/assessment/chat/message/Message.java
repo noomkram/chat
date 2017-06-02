@@ -47,4 +47,11 @@ public class Message {
     created = new Date();
   }
 
+  public void setUserId(long userId) {
+    if (null == user) {
+      user = new User();
+    }
+    user.setId(userId);
+  }
+
 }

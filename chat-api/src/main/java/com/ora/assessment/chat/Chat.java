@@ -39,6 +39,13 @@ public class Chat {
     this.id = id;
   }
 
+  public void setOwnerId(long ownerId) {
+    if (null == owner) {
+      owner = new User();
+    }
+    owner.setId(ownerId);
+  }
+
   public boolean isNew() {
     return this.id == null;
   }
