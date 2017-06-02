@@ -21,7 +21,7 @@ public class MessageService {
   }
 
   public Message getLastMessageForChat(long chatId) {
-    return messageRepo.findTopByOrderByCreatedDesc();
+    return messageRepo.findTopByChatIdOrderByCreatedDesc(chatId);
   }
 
   public List<Message> getMessagesForChat(long chatId) {
