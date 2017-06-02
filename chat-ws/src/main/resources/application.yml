@@ -1,0 +1,15 @@
+# TODO externalize param
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://192.168.99.100:5432/ora-db
+    username: system
+    password: password
+  jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+# TODO revisit format
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ssz
+jwt:
+  header: Authorization
+  secret: theSauceIsTheBoss
+  expiration: 600000
