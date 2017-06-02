@@ -20,6 +20,10 @@ public class UserService {
     return userRepo.findOne(id);
   }
 
+  public User getByEmail(String email) {
+    return userRepo.findByEmailIgnoreCase(email);
+  }
+
   @Transactional(readOnly = false, rollbackFor = Throwable.class)
   public User save(SaveUser user) {
     if (user.isNew()) {
@@ -53,6 +57,5 @@ public class UserService {
 
     return userRepo.save(existingUser);
   }
-
 
 }
