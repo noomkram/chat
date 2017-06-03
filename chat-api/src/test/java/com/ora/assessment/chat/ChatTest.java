@@ -28,12 +28,6 @@ public class ChatTest {
   }
 
   @Test
-  public void testConstructorWithId() {
-    chat = new Chat(ID);
-    assertEquals(ID, chat.getId().longValue());
-  }
-
-  @Test
   public void testIsNewWhenIsNotNew() {
     chat.setId(ID);
     assertFalse(chat.isNew());
@@ -63,7 +57,7 @@ public class ChatTest {
     assertNull(chat.getOwner());
 
     chat.setOwnerId(OWNER_ID);
-    assertEquals(OWNER_ID, chat.getOwner().getId());
+    assertEquals(OWNER_ID, chat.getOwner().getId().longValue());
   }
 
 }
