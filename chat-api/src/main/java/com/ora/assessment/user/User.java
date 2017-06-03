@@ -9,6 +9,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.ora.assessment.Updating;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -22,6 +24,7 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "USER_ID")
+  @NotNull(groups = Updating.class)
   private Long id;
   @NotNull
   @Size(max = 100)
@@ -35,5 +38,10 @@ public class User {
   @Size(max = 100)
   @NonNull
   private String password;
+
+  public boolean isNew() {
+    return null == id;
+  }
+
 
 }

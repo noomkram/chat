@@ -23,8 +23,9 @@ public abstract class BaseResource implements Resource {
     addMeta(key, value);
   }
 
-  public void addMeta(String key, Object value) {
+  public Resource addMeta(String key, Object value) {
     this.meta.put(key, value);
+    return this;
   }
 
 }

@@ -21,8 +21,9 @@ public class ErrorResource extends BaseResource {
     this.errors = new LinkedMultiValueMap<>();
   }
 
-  public void addError(String key, String message) {
+  public ErrorResource addError(String key, String message) {
     this.errors.add(key, message);
+    return this;
   }
 
 }
