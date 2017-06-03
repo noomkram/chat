@@ -27,7 +27,7 @@ public class MessageController {
   private MessageService messageService;
 
   @PostMapping
-  public ResponseEntity<Resource> create(AuthenticatedUser user, @PathVariable Long chatId,
+  public ResponseEntity<DataResource<MessageResource>> create(AuthenticatedUser user, @PathVariable Long chatId,
       @RequestBody SaveMessage message) {
 
     Message newMessage = new Message();
@@ -36,7 +36,7 @@ public class MessageController {
     newMessage.withUserId(user.getUserId());
 
     return ResponseEntity.status(CREATED)
-        .body(new DataResource(messageService.save(newMessage), MessageResource::new));
+        .body(new DataResource<MessageResource>(messageService.save(newMessage), MessageResource::new));
   }
 
   // TODO remove AuthenticatedUser, not needed

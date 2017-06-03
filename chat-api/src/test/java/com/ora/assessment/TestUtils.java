@@ -14,6 +14,8 @@ public class TestUtils {
   public static final String EMAIL = "EMAIL";
   public static final String PASSWORD = "PASSWORD";
   public static final String ENCODED_PASSWORD = "ENCODED_PASSWORD";
+  public static final String NAME = "NAME";
+  public static final String MESSAGE = "MESSAGE";
 
   @SuppressWarnings("unchecked")
   public static Answer<Identifiable<Long>> populateId = invocation -> {

@@ -7,16 +7,16 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class DataResource extends BaseResource {
+public class DataResource<T> extends BaseResource {
 
-  private final Object data;
+  private final T data;
 
-  public DataResource(Object data) {
+  public DataResource(T data) {
     super();
     this.data = data;
   }
 
-  public <T> DataResource(T data, Function<T, ?> resourceFunction) {
+  public <I> DataResource(I data, Function<I, T> resourceFunction) {
     super();
     this.data = resourceFunction.apply(data);
   }

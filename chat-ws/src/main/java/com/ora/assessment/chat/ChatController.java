@@ -14,24 +14,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ora.assessment.GlobalExceptionHandlers;
 import com.ora.assessment.auth.AuthenticatedUser;
 import com.ora.assessment.chat.message.Message;
 import com.ora.assessment.chat.message.MessageResource;
 import com.ora.assessment.resource.DataResource;
 import com.ora.assessment.resource.ErrorResource;
-import com.ora.assessment.resource.Resource;
 import com.ora.assessment.user.UserResource;
+
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping(value = "/chats", consumes = APPLICATION_JSON_VALUE)
+@Slf4j
 public class ChatController {
 
   @Autowired
   private ChatService chatService;
 
   @PostMapping
-  public ResponseEntity<Resource> create(AuthenticatedUser user,
+  public ResponseEntity<DataResource<ChatResource>> create(AuthenticatedUser user,
       @RequestBody CreateChat createChat) {
+    log.trace("POST /chats : {}", createChat);
+
     Message message = new Message();
     message.withUserId(user.getUserId());
     message.setMessage(createChat.getMessage());
@@ -45,7 +50,7 @@ public class ChatController {
   }
 
   @PatchMapping("/{chatId}")
-  public ResponseEntity<Resource> update(AuthenticatedUser user, @PathVariable Long chatId,
+  public ResponseEntity<DataResource<ChatResource>> update(AuthenticatedUser user, @PathVariable Long chatId,
       @RequestBody UpdateChat updatedChat) {
     Chat chat = new Chat();
     chat.setId(chatId);
@@ -55,16 +60,16 @@ public class ChatController {
     return ResponseEntity.status(CREATED).body(asDataResource(chatService.save(chat)));
   }
 
-  private DataResource asDataResource(Chat chat) {
+  @ExceptionHandler
+  public ErrorResource duplicateChatName(DataIntegrityViolationException ex) {
+    return new ErrorResource(GlobalExceptionHandlers.VAILATION_FAILED).addError("name", "chat with name already exists");
+  }
+
+  private DataResource<ChatResource> asDataResource(Chat chat) {
     ChatResource chatResource = new ChatResource(chat);
     chatResource.setMessage(new MessageResource(chat.getMessage()));
     chatResource.add(new UserResource(chat.getOwner()));
-    return new DataResource(chatResource);
-  }
-
-  @ExceptionHandler
-  public ErrorResource duplicateChatName(DataIntegrityViolationException ex) {
-    return new ErrorResource("Validation Failed").addError("name", "chat with name already exists");
+    return new DataResource<>(chatResource);
   }
 
 }

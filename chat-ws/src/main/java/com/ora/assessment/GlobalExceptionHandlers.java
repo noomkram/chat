@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.ora.assessment.resource.ErrorResource;
+import com.ora.assessment.validation.ValidationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandlers {
+
+  public static final String VAILATION_FAILED = "Validation Failed";
 
   @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(NOT_FOUND)
@@ -35,8 +38,8 @@ public class GlobalExceptionHandlers {
 
   @ExceptionHandler
   // TODO status code
-  public ErrorResource validation(ConstraintViolationException ex) {
-    ErrorResource resource = new ErrorResource("Validation Failed");
+  public ErrorResource failedValidation(ConstraintViolationException ex) {
+    ErrorResource resource = new ErrorResource(VAILATION_FAILED);
     ex.getConstraintViolations()
         .forEach(v -> resource.addError(v.getPropertyPath().toString(), v.getMessage()));
     return resource;
@@ -44,8 +47,8 @@ public class GlobalExceptionHandlers {
 
   @ExceptionHandler
   // TODO status code
-  public ErrorResource validation(ValidationException ex) {
-    ErrorResource resource = new ErrorResource("Validation Failed");
+  public ErrorResource failedValidation(ValidationException ex) {
+    ErrorResource resource = new ErrorResource(VAILATION_FAILED);
     ex.getErrors().getFieldErrors()
         .forEach(e -> resource.addError(e.getField(), e.getDefaultMessage()));
     return resource;

@@ -27,7 +27,7 @@ public class AuthenticatedUserHandlerMethodArgumentResolver
   public Object resolveArgument(final MethodParameter parameter,
       final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest,
       final WebDataBinderFactory binderFactory) throws Exception {
-    if (parameter.getParameterType().equals(AuthenticatedUser.class)) { // TODO revisit
+    if (AuthenticatedUser.class.isAssignableFrom(parameter.getParameterType())) {
       return SecurityContextHolder.getContext().getAuthentication();
     }
     return WebArgumentResolver.UNRESOLVED;

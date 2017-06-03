@@ -8,11 +8,9 @@ import com.ora.assessment.chat.message.MessageResource;
 import com.ora.assessment.user.UserResource;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@NoArgsConstructor
 @Getter
 @ToString
 public class ChatResource {

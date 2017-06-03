@@ -13,8 +13,4 @@ public class SaveUser {
   private String password;
   private String confirmPassword;
 
-  public boolean isNew() {
-    return null == id;
-  }
-
 }
