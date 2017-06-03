@@ -1,4 +1,4 @@
-package com.ora.assessment.chat;
+package com.ora.assessment.validation;
 
 import static org.junit.Assert.assertEquals;
 
