@@ -1,5 +1,7 @@
 package com.ora.assessment.chat;
 
+import static com.ora.assessment.TestUtils.CHAT_ID;
+import static com.ora.assessment.TestUtils.OWNER_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -11,9 +13,6 @@ import org.junit.Test;
 import com.ora.assessment.user.User;
 
 public class ChatTest {
-
-  public static final long ID = 1L;
-  public static final long OWNER_ID = 2L;
 
   private Chat chat;
   private User user;
@@ -29,7 +28,7 @@ public class ChatTest {
 
   @Test
   public void testIsNewWhenIsNotNew() {
-    chat.setId(ID);
+    chat.setId(CHAT_ID);
     assertFalse(chat.isNew());
   }
 
@@ -55,6 +54,16 @@ public class ChatTest {
   public void testSetOwnerId() {
     Chat chat = new Chat();
     assertNull(chat.getOwner());
+
+    chat.setOwnerId(OWNER_ID);
+    assertEquals(OWNER_ID, chat.getOwner().getId().longValue());
+  }
+
+  @Test
+  public void testSetOwnerIdWhenOwnerIsNotNull() {
+    User owner = new User();
+    Chat chat = new Chat();
+    chat.setOwner(owner);
 
     chat.setOwnerId(OWNER_ID);
     assertEquals(OWNER_ID, chat.getOwner().getId().longValue());

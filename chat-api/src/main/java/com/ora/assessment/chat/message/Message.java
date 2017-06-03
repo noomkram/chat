@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.ora.assessment.Identifiable;
 import com.ora.assessment.user.User;
 
 import lombok.Data;
@@ -23,7 +24,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "MESSAGES")
-public class Message {
+public class Message implements Identifiable<Long> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,10 +47,6 @@ public class Message {
   @PrePersist
   protected void beforeSave() {
     created = new Date();
-  }
-
-  public boolean isNew() {
-    return null == id;
   }
 
   public void withUserId(long userId) {

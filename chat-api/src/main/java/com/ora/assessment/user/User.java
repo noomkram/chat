@@ -9,17 +9,17 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.ora.assessment.Identifiable;
 import com.ora.assessment.validation.ValidationGroups.Updating;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "CHAT_USERS")
-public class User {
+public class User implements Identifiable<Long> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,20 +28,12 @@ public class User {
   private Long id;
   @NotNull
   @Size(max = 100)
-  @NonNull
   private String name;
   @NotNull
   @Size(max = 100)
-  @NonNull
   private String email;
   @NotNull
   @Size(max = 100)
-  @NonNull
   private String password;
-
-  public boolean isNew() {
-    return null == id;
-  }
-
 
 }

@@ -1,5 +1,7 @@
 package com.ora.assessment.chat.message;
 
+import static com.ora.assessment.TestUtils.populateId;
+import static java.lang.Long.MIN_VALUE;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,24 +21,29 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.ora.assessment.user.User;
+import com.ora.assessment.user.UserService;
+
 @RunWith(MockitoJUnitRunner.class)
 public class MessageServiceTest {
 
   public static final long CHAT_ID = 1L;
+  public static final Long USER_ID = 2L;
 
   @InjectMocks
   private MessageService service;
   @Mock
   private MessageRepository messageRepo;
-
-  private Message message;
+  @Mock
+  private UserService userService;
 
   @Before
   public void setup() {
-    message = new Message();
-
-    when(messageRepo.findTopByChatIdOrderByCreatedDesc(anyLong())).thenReturn(message);
-    when(messageRepo.findByChatId(anyLong(), any())).thenReturn(new PageImpl<>(asList(message)));
+    when(messageRepo.findTopByChatIdOrderByCreatedDesc(anyLong())).thenReturn(new Message());
+    when(messageRepo.findByChatId(anyLong(), any()))
+        .thenReturn(new PageImpl<>(asList(new Message())));
+    when(messageRepo.save(any(Message.class))).thenAnswer(populateId);
+    when(userService.get(anyLong())).thenReturn(user());
   }
 
   @Test
@@ -56,5 +63,37 @@ public class MessageServiceTest {
 
     verify(messageRepo).findByChatId(eq(CHAT_ID), eq(pageable));
   }
+
+  @Test(expected = UnsupportedOperationException.class)
+  public void testUpdate() {
+    service.save(messageToUpdate());
+  }
+
+  @Test
+  public void testCreate() {
+    final Message actual = service.save(messageToCreate());
+    assertNotNull(actual.getId());
+
+    verify(userService).get(USER_ID);
+  }
+
+  private Message messageToCreate() {
+    Message message = new Message();
+    message.setUser(user());
+    return message;
+  }
+
+  private Message messageToUpdate() {
+    Message message = messageToCreate();
+    message.setId(MIN_VALUE);
+    return message;
+  }
+
+  private User user() {
+    User user = new User();
+    user.setId(USER_ID);
+    return user;
+  }
+
 
 }

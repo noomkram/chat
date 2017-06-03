@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.ora.assessment.Identifiable;
 import com.ora.assessment.chat.message.Message;
 import com.ora.assessment.user.User;
 import com.ora.assessment.validation.ValidationGroups.Creating;
@@ -25,7 +26,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "CHATS")
-public class Chat {
+public class Chat implements Identifiable<Long> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,10 +49,6 @@ public class Chat {
       owner = new User();
     }
     owner.setId(ownerId);
-  }
-
-  public boolean isNew() {
-    return this.id == null;
   }
 
   public boolean isOwner(long userId) {

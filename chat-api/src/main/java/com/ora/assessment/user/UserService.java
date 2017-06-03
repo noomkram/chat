@@ -58,25 +58,26 @@ public class UserService {
 
     existingUser.setEmail(user.getEmail());
     existingUser.setName(user.getName());
-    existingUser.setPassword(user.getPassword());
 
     return userRepo.save(existingUser);
   }
 
-  private void validateExistingPassword(User user, String confirmPassword) {
-    if (!passwordEncoder.matches(user.getPassword(), confirmPassword)) {
-      Errors errors = new BeanPropertyBindingResult(user, "user");
-      errors.rejectValue("password", "passwords do not match");
-      throw new ValidationException(errors);
+  private void validateExistingPassword(User existingUser, String confirmPassword) {
+    if (!passwordEncoder.matches(existingUser.getPassword(), confirmPassword)) {
+      raiseValidationException(existingUser);
     }
   }
 
   private void validateConfirmPassword(User user, String confirmPassword) {
     if (!user.getPassword().equals(confirmPassword)) {
-      Errors errors = new BeanPropertyBindingResult(user, "user");
-      errors.rejectValue("password", "passwords do not match");
-      throw new ValidationException(errors);
+      raiseValidationException(user);
     }
+  }
+
+  private void raiseValidationException(User user) {
+    Errors errors = new BeanPropertyBindingResult(user, "user");
+    errors.rejectValue("password", "passwords.non.matching", "passwords do not match");
+    throw new ValidationException(errors);
   }
 
 }
