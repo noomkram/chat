@@ -2,12 +2,11 @@ package com.ora.assessment.chat.message;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +14,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MessageServiceTest {
@@ -33,12 +36,12 @@ public class MessageServiceTest {
     message = new Message();
 
     when(messageRepo.findTopByChatIdOrderByCreatedDesc(anyLong())).thenReturn(message);
-    when(messageRepo.findByChatId(anyLong())).thenReturn(asList(message));
+    when(messageRepo.findByChatId(anyLong(), any())).thenReturn(new PageImpl<>(asList(message)));
   }
 
   @Test
   public void testGetLastMessageForChat() {
-    Message actual = service.getLastMessageForChat(CHAT_ID);
+    final Message actual = service.getLastMessageForChat(CHAT_ID);
     assertNotNull(actual);
 
     verify(messageRepo).findTopByChatIdOrderByCreatedDesc(eq(CHAT_ID));
@@ -47,10 +50,11 @@ public class MessageServiceTest {
 
   @Test
   public void getMessagesForChat() {
-    List<Message> actual = service.getMessagesForChat(CHAT_ID);
+    final Pageable pageable = new PageRequest(1, 50);
+    final Page<Message> actual = service.getMessagesForChat(CHAT_ID, pageable);
     assertNotNull(actual);
 
-    verify(messageRepo).findByChatId(eq(CHAT_ID));
+    verify(messageRepo).findByChatId(eq(CHAT_ID), eq(pageable));
   }
 
 }

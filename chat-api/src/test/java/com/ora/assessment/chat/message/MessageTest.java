@@ -10,6 +10,7 @@ import org.junit.Test;
 public class MessageTest {
 
   public static final long USER_ID = 1L;
+  public static final long CHAT_ID = 2L;
 
   private Message message;
 
@@ -27,12 +28,12 @@ public class MessageTest {
   }
 
   @Test
-  public void testSetUserId() {
+  public void testWithUserId() {
     Message message = new Message();
     assertNull(message.getUser());
 
-    message.setUserId(USER_ID);
-    assertEquals(USER_ID, message.getUser().getId());
+    message.withUserId(USER_ID);
+    assertEquals(USER_ID, message.getUser().getId().longValue());
   }
 
 }

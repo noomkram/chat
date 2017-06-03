@@ -8,14 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import com.ora.assessment.chat.Chat;
 import com.ora.assessment.user.User;
 
 import lombok.Data;
@@ -25,16 +25,17 @@ import lombok.Data;
 @Table(name = "MESSAGES")
 public class Message {
 
-  // TODO validations/constraints
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "MESSAGE_ID")
-  private Integer id;
+  private Long id;
+  @NotNull
+  @Size(max = 1000)
   private String message;
-  @ManyToOne
-  @JoinColumn(name = "CHAT_ID")
-  private Chat chat;
+  @NotNull
+  @Column(name = "CHAT_ID")
+  private Long chatId;
+  @NotNull
   @OneToOne
   @JoinColumn(name = "USER_ID")
   private User user;
@@ -47,7 +48,11 @@ public class Message {
     created = new Date();
   }
 
-  public void setUserId(long userId) {
+  public boolean isNew() {
+    return null == id;
+  }
+
+  public void withUserId(long userId) {
     if (null == user) {
       user = new User();
     }
