@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ora.assessment.GlobalExceptionHandlers;
-import com.ora.assessment.auth.AuthenticatedUser;
 import com.ora.assessment.chat.message.Message;
 import com.ora.assessment.chat.message.MessageResource;
 import com.ora.assessment.resource.DataResource;
 import com.ora.assessment.resource.ErrorResource;
+import com.ora.assessment.security.AuthenticatedUser;
 import com.ora.assessment.user.UserResource;
 
 import lombok.extern.slf4j.Slf4j;

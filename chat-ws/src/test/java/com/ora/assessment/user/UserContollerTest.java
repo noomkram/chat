@@ -26,8 +26,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
 
-import com.ora.assessment.auth.AuthenticatedUser;
 import com.ora.assessment.resource.DataResource;
+import com.ora.assessment.security.AuthenticatedUser;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserContollerTest {

@@ -28,10 +28,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 
 import com.ora.assessment.GlobalExceptionHandlers;
-import com.ora.assessment.auth.AuthenticatedUser;
 import com.ora.assessment.chat.message.Message;
 import com.ora.assessment.resource.DataResource;
 import com.ora.assessment.resource.ErrorResource;
+import com.ora.assessment.security.AuthenticatedUser;
 import com.ora.assessment.user.User;
 
 @RunWith(MockitoJUnitRunner.class)

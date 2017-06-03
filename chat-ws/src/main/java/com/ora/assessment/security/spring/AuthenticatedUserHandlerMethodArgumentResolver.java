@@ -1,4 +1,4 @@
-package com.ora.assessment.auth.spring;
+package com.ora.assessment.security.spring;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,7 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.ora.assessment.auth.AuthenticatedUser;
+import com.ora.assessment.security.AuthenticatedUser;
 
 
 public class AuthenticatedUserHandlerMethodArgumentResolver

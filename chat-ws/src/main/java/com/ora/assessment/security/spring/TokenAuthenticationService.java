@@ -1,4 +1,4 @@
-package com.ora.assessment.auth.spring;
+package com.ora.assessment.security.spring;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import com.ora.assessment.auth.AuthenticatedUser;
-import com.ora.assessment.auth.spring.UserDetailsService.AuthenticatedUserDetails;
+import com.ora.assessment.security.AuthenticatedUser;
+import com.ora.assessment.security.spring.UserDetailsService.AuthenticatedUserDetails;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

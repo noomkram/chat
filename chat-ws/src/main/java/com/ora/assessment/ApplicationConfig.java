@@ -13,7 +13,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
-import com.ora.assessment.auth.spring.AuthenticatedUserHandlerMethodArgumentResolver;
+import com.ora.assessment.security.spring.AuthenticatedUserHandlerMethodArgumentResolver;
 
 @Configuration
 @Import(ApiConfig.class)

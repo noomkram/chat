@@ -1,4 +1,4 @@
-package com.ora.assessment.auth;
+package com.ora.assessment.security;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

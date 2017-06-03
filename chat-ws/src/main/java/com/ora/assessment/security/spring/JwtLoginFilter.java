@@ -1,4 +1,4 @@
-package com.ora.assessment.auth.spring;
+package com.ora.assessment.security.spring;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -16,8 +16,8 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ora.assessment.auth.UserCredentials;
-import com.ora.assessment.auth.spring.UserDetailsService.AuthenticatedUserDetails;
+import com.ora.assessment.security.UserCredentials;
+import com.ora.assessment.security.spring.UserDetailsService.AuthenticatedUserDetails;
 
 public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
 

@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ora.assessment.auth.AuthenticatedUser;
 import com.ora.assessment.resource.DataListResource;
 import com.ora.assessment.resource.DataResource;
 import com.ora.assessment.resource.Resource;
+import com.ora.assessment.security.AuthenticatedUser;
 
 @RestController
 @RequestMapping(value = "/chats/{chatId}/chat_messages", consumes = APPLICATION_JSON_VALUE)

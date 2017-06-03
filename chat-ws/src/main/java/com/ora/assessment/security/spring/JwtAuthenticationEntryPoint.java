@@ -1,4 +1,4 @@
-package com.ora.assessment.auth.spring;
+package com.ora.assessment.security.spring;
 
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
