@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import com.ora.assessment.Creating;
 import com.ora.assessment.NotFoundException;
-import com.ora.assessment.Updating;
 import com.ora.assessment.chat.message.Message;
 import com.ora.assessment.chat.message.MessageService;
+import com.ora.assessment.validation.ValidationGroups.Creating;
+import com.ora.assessment.validation.ValidationGroups.Updating;
 
 @Service
 @Transactional(readOnly = true)

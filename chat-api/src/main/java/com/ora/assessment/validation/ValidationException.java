@@ -1,4 +1,4 @@
-package com.ora.assessment;
+package com.ora.assessment.validation;
 
 import org.springframework.validation.Errors;
 

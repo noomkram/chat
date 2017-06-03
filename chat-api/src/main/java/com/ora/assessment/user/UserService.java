@@ -8,10 +8,10 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 
-import com.ora.assessment.Creating;
 import com.ora.assessment.NotFoundException;
-import com.ora.assessment.Updating;
-import com.ora.assessment.ValidationException;
+import com.ora.assessment.validation.ValidationException;
+import com.ora.assessment.validation.ValidationGroups.Creating;
+import com.ora.assessment.validation.ValidationGroups.Updating;
 
 @Service
 @Transactional(readOnly = true)

@@ -13,10 +13,10 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.ora.assessment.Creating;
-import com.ora.assessment.Updating;
 import com.ora.assessment.chat.message.Message;
 import com.ora.assessment.user.User;
+import com.ora.assessment.validation.ValidationGroups.Creating;
+import com.ora.assessment.validation.ValidationGroups.Updating;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
