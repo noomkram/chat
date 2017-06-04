@@ -1,15 +1,20 @@
 package com.ora.assessment.user;
 
+import static com.ora.assessment.TestUtils.CHAT_ID;
 import static com.ora.assessment.TestUtils.EMAIL;
 import static com.ora.assessment.TestUtils.ENCODED_PASSWORD;
 import static com.ora.assessment.TestUtils.PASSWORD;
 import static com.ora.assessment.TestUtils.USER_ID;
 import static com.ora.assessment.TestUtils.populateId;
+import static com.ora.assessment.TestUtils.user;
+import static java.util.Collections.singleton;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,8 +39,9 @@ public class UserServiceTest {
 
   @Before
   public void setup() {
-    when(userRepo.findOne(USER_ID)).thenReturn(new User());
-    when(userRepo.findByEmailIgnoreCase(EMAIL)).thenReturn(new User());
+    when(userRepo.findOne(USER_ID)).thenReturn(user());
+    when(userRepo.findByEmailIgnoreCase(EMAIL)).thenReturn(user());
+    when(userRepo.findByChatId(CHAT_ID)).thenReturn(singleton(user()));
     when(userRepo.save(any(User.class))).thenAnswer(populateId);
     when(passwordEncoder.encode(any())).thenReturn(ENCODED_PASSWORD);
     when(passwordEncoder.matches(any(), any())).thenReturn(true);
@@ -114,6 +120,12 @@ public class UserServiceTest {
 
     assertEquals(UPDATED_NAME, actual.getName());
     assertEquals(UPDATED_EMAIL, actual.getEmail());
+  }
+
+  @Test
+  public void testGetUsersInChat() {
+    Set<User> actual = service.getUsersInChat(CHAT_ID);
+    assertNotNull(actual);
   }
 
   private User userToCreate() {

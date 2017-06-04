@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import com.ora.assessment.NotFoundException;
 import com.ora.assessment.chat.message.Message;
 import com.ora.assessment.chat.message.MessageService;
+import com.ora.assessment.user.UserService;
 import com.ora.assessment.validation.ValidationGroups.Creating;
 import com.ora.assessment.validation.ValidationGroups.Updating;
 
@@ -19,6 +20,8 @@ public class ChatService {
   private ChatRepository chatRepo;
   @Autowired
   private MessageService messageService;
+  @Autowired
+  private UserService userService;
 
   @Transactional(readOnly = false, rollbackFor = Throwable.class)
   public Chat save(Chat chat) {
@@ -34,14 +37,14 @@ public class ChatService {
     final Message message = chat.getMessage();
     message.setChatId(savedChat.getId());
 
-    final Message savedMessage = messageService.save(message);
-    savedChat.setMessage(savedMessage);
+    savedChat.setMessage(messageService.save(message));
+    savedChat.setUsers(userService.getUsersInChat(savedChat.getId()));
 
     return savedChat;
   }
 
   private Chat update(@Validated(Updating.class) Chat chat) {
-    Chat existingChat = chatRepo.findOne(chat.getId());
+    final Chat existingChat = chatRepo.findOne(chat.getId());
     if (null == existingChat) {
       throw new NotFoundException("chat not found");
     }
@@ -53,6 +56,7 @@ public class ChatService {
 
     final Chat savedChat = chatRepo.save(existingChat);
     savedChat.setMessage(messageService.getLastMessageForChat(chat.getId()));
+    savedChat.setUsers(userService.getUsersInChat(savedChat.getId()));
 
     return savedChat;
   }

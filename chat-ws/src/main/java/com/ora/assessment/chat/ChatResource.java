@@ -32,4 +32,8 @@ public class ChatResource {
     users.add(user);
   }
 
+  public void add(List<UserResource> users) {
+    this.users.addAll(users);
+  }
+
 }

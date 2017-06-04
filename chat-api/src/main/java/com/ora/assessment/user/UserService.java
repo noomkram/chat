@@ -1,5 +1,7 @@
 package com.ora.assessment.user;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,10 @@ public class UserService {
     return update(user, confirmPassword);
   }
 
+  public Set<User> getUsersInChat(long chatId) {
+    return userRepo.findByChatId(chatId);
+  }
+
   private User create(@Validated(Creating.class) User user, String confirmPassword) {
     validateConfirmPassword(user, confirmPassword);
 
@@ -48,7 +54,7 @@ public class UserService {
   }
 
   private User update(@Validated(Updating.class) User user, String confirmPassword) {
-    User existingUser = userRepo.findOne(user.getId());
+    final User existingUser = userRepo.findOne(user.getId());
     if (null == existingUser) {
       throw new NotFoundException("user not found");
     }
@@ -63,7 +69,7 @@ public class UserService {
   }
 
   private void validateExistingPassword(User existingUser, String confirmPassword) {
-    if (!passwordEncoder.matches(existingUser.getPassword(), confirmPassword)) {
+    if (!passwordEncoder.matches(confirmPassword, existingUser.getPassword())) {
       raiseValidationException(existingUser);
     }
   }
@@ -75,7 +81,7 @@ public class UserService {
   }
 
   private void raiseValidationException(User user) {
-    Errors errors = new BeanPropertyBindingResult(user, "user");
+    final Errors errors = new BeanPropertyBindingResult(user, "user");
     errors.rejectValue("password", "passwords.non.matching", "passwords do not match");
     throw new ValidationException(errors);
   }

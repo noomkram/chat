@@ -7,6 +7,7 @@ import static com.ora.assessment.TestUtils.NAME;
 import static com.ora.assessment.TestUtils.USER_ID;
 import static com.ora.assessment.TestUtils.authenticatedUser;
 import static com.ora.assessment.TestUtils.user;
+import static java.util.Collections.singleton;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,7 +43,6 @@ public class ChatControllerTest {
   @Captor
   private ArgumentCaptor<Chat> chatCaptor;
 
-
   @Test
   public void testCreate() {
     final CreateChat createChat = new CreateChat();
@@ -57,6 +57,7 @@ public class ChatControllerTest {
 
       chat.getMessage().setId(rand.nextLong());
       chat.getMessage().setChatId(chat.getId());
+      chat.setUsers(singleton(user()));
       return chat;
     });
 
@@ -92,6 +93,7 @@ public class ChatControllerTest {
 
       chat.setMessage(message);
       chat.setOwner(user());
+      chat.setUsers(singleton(user()));
 
       return chat;
     });

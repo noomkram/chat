@@ -1,15 +1,20 @@
 package com.ora.assessment.chat;
 
 import static com.ora.assessment.TestUtils.CHAT_ID;
-import static com.ora.assessment.TestUtils.OWNER_ID;
+import static com.ora.assessment.TestUtils.USER_ID;
 import static com.ora.assessment.TestUtils.populateId;
+import static com.ora.assessment.TestUtils.user;
+import static java.util.Collections.singleton;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +27,7 @@ import com.ora.assessment.NotFoundException;
 import com.ora.assessment.chat.message.Message;
 import com.ora.assessment.chat.message.MessageService;
 import com.ora.assessment.user.User;
+import com.ora.assessment.user.UserService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChatServiceTest {
@@ -35,6 +41,8 @@ public class ChatServiceTest {
   private ChatRepository chatRepo;
   @Mock
   private MessageService messageService;
+  @Mock
+  private UserService userService;
 
   @Before
   public void setup() {
@@ -42,6 +50,7 @@ public class ChatServiceTest {
     when(chatRepo.findOne(anyLong())).thenReturn(chatToUpdate());
     when(messageService.save(any(Message.class))).then(populateId);
     when(messageService.getLastMessageForChat(anyLong())).thenReturn(newMessage());
+    when(userService.getUsersInChat(anyLong())).thenReturn(singleton(user()));
   }
 
   @Test
@@ -57,6 +66,12 @@ public class ChatServiceTest {
 
     final Long actualMessageId = actualMessage.getId();
     assertNotNull(actualMessageId);
+
+    final Set<User> actualUsers = actual.getUsers();
+    assertEquals(1, actualUsers.size());
+    assertTrue(actualUsers.contains(user()));
+
+    verify(userService).getUsersInChat(actualChatId);
   }
 
   @Test(expected = NotFoundException.class)
@@ -69,7 +84,7 @@ public class ChatServiceTest {
   @Test(expected = IllegalStateException.class)
   public void testUpdateWhenNotOwnedByUser() {
     final Chat chatWithDifferentOwner = chatToUpdate();
-    chatWithDifferentOwner.getOwner().setId(OWNER_ID + 1);
+    chatWithDifferentOwner.getOwner().setId(USER_ID + 1);
 
     when(chatRepo.findOne(CHAT_ID)).thenReturn(chatToUpdate());
 
@@ -87,17 +102,19 @@ public class ChatServiceTest {
     assertEquals(expectedName, actualChat.getName());
     assertNotNull(actualChat.getMessage());
 
+    final Set<User> actualUsers = actualChat.getUsers();
+    assertEquals(1, actualUsers.size());
+    assertTrue(actualUsers.contains(user()));
+
     verify(messageService).getLastMessageForChat(CHAT_ID);
+    verify(userService).getUsersInChat(CHAT_ID);
   }
 
   private Chat chatToCreate() {
-    User owner = new User();
-    owner.setId(OWNER_ID);
-
     Chat c = new Chat();
     c.setMessage(newMessage());
     c.setName(NAME);
-    c.setOwner(owner);
+    c.setOwner(user());
     return c;
   }
 

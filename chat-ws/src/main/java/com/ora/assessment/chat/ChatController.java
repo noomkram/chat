@@ -3,6 +3,8 @@ package com.ora.assessment.chat;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -71,7 +73,7 @@ public class ChatController {
   private DataResource<ChatResource> asDataResource(Chat chat) {
     ChatResource chatResource = new ChatResource(chat);
     chatResource.setMessage(new MessageResource(chat.getMessage()));
-    chatResource.add(new UserResource(chat.getOwner()));
+    chatResource.add(chat.getUsers().stream().map(UserResource::new).collect(Collectors.toList()));
     return new DataResource<>(chatResource);
   }
 
