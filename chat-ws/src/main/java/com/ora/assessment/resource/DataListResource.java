@@ -19,24 +19,23 @@ import lombok.ToString;
 @ToString
 public class DataListResource extends BaseResource {
 
-  private final Collection<Object> data;
+  public static final String META_KEY = "pagination";
 
-  public DataListResource(@NonNull Collection<Object> data) {
+  private final Collection<?> data;
+
+  public DataListResource(@NonNull Collection<?> data) {
     super();
     this.data = data;
   }
 
-  public <T> DataListResource(@NonNull Collection<T> source,
+  public <T> DataListResource(Collection<T> source,
       @NonNull Function<T, ?> resourceFunction) {
-    super();
-    this.data = source.stream().map(s -> resourceFunction.apply(s)).collect(Collectors.toList());
+    this(source.stream().map(s -> resourceFunction.apply(s)).collect(Collectors.toList()));
   }
 
-  public <T> DataListResource(@NonNull Page<T> source, @NonNull Function<T, ?> resourceFunction) {
-    super();
-    this.data = source.getContent().stream().map(s -> resourceFunction.apply(s))
-        .collect(Collectors.toList());
-    super.addMeta("pagination", source);
+  public <T> DataListResource(Page<T> source, @NonNull Function<T, ?> resourceFunction) {
+    this(source.getContent(), resourceFunction);
+    super.addMeta(META_KEY, source);
   }
 
   /**
