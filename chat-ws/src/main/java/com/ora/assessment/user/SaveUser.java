@@ -1,5 +1,7 @@
 package com.ora.assessment.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,7 @@ public class SaveUser {
   private String name;
   private String email;
   private String password;
-  private String confirmPassword;
+  @JsonProperty("password_confirmation")
+  private String passwordConfirmation;
 
 }
