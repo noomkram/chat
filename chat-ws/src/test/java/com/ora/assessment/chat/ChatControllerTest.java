@@ -1,11 +1,12 @@
 package com.ora.assessment.chat;
 
 import static com.ora.assessment.TestUtils.CHAT_ID;
-import static com.ora.assessment.TestUtils.EMAIL;
 import static com.ora.assessment.TestUtils.MESSAGE;
 import static com.ora.assessment.TestUtils.MESSAGE_ID;
 import static com.ora.assessment.TestUtils.NAME;
 import static com.ora.assessment.TestUtils.USER_ID;
+import static com.ora.assessment.TestUtils.authenticatedUser;
+import static com.ora.assessment.TestUtils.user;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -16,7 +17,6 @@ import static org.springframework.http.HttpStatus.OK;
 
 import java.util.Random;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -31,8 +31,6 @@ import com.ora.assessment.GlobalExceptionHandlers;
 import com.ora.assessment.chat.message.Message;
 import com.ora.assessment.resource.DataResource;
 import com.ora.assessment.resource.ErrorResource;
-import com.ora.assessment.security.AuthenticatedUser;
-import com.ora.assessment.user.User;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChatControllerTest {
@@ -44,15 +42,6 @@ public class ChatControllerTest {
   @Captor
   private ArgumentCaptor<Chat> chatCaptor;
 
-  private AuthenticatedUser authenticatedUser;
-  private User user;
-
-  @Before
-  public void setup() {
-    authenticatedUser = new AuthenticatedUser(USER_ID, EMAIL, NAME);
-    user = new User();
-    user.setId(USER_ID);
-  }
 
   @Test
   public void testCreate() {
@@ -72,7 +61,7 @@ public class ChatControllerTest {
     });
 
     final ResponseEntity<DataResource<ChatResource>> actualResponse =
-        controller.create(authenticatedUser, createChat);
+        controller.create(authenticatedUser(), createChat);
     assertEquals(OK, actualResponse.getStatusCode());
 
     verify(chatService).save(chatCaptor.capture());
@@ -98,17 +87,17 @@ public class ChatControllerTest {
       Message message = new Message();
       message.setId(MESSAGE_ID);
       message.setMessage(MESSAGE);
-      message.setUser(user);
+      message.setUser(user());
       message.setChatId(chat.getId());
 
       chat.setMessage(message);
-      chat.setOwner(user);
+      chat.setOwner(user());
 
       return chat;
     });
 
     final ResponseEntity<DataResource<ChatResource>> actualResponse =
-        controller.update(authenticatedUser, CHAT_ID, updateChat);
+        controller.update(authenticatedUser(), CHAT_ID, updateChat);
     assertEquals(CREATED, actualResponse.getStatusCode());
 
     verify(chatService).save(chatCaptor.capture());

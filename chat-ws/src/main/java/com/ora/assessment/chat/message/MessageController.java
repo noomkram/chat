@@ -15,32 +15,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ora.assessment.resource.DataListResource;
 import com.ora.assessment.resource.DataResource;
-import com.ora.assessment.resource.Resource;
 import com.ora.assessment.security.AuthenticatedUser;
 
 @RestController
-@RequestMapping(value = "/chats/{chatId}/chat_messages", consumes = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/chats/{chatId}/chat_messages", consumes = APPLICATION_JSON_VALUE,
+    produces = APPLICATION_JSON_VALUE)
 public class MessageController {
 
   @Autowired
   private MessageService messageService;
 
   @PostMapping
-  public ResponseEntity<DataResource<MessageResource>> create(AuthenticatedUser user, @PathVariable Long chatId,
-      @RequestBody SaveMessage message) {
+  public ResponseEntity<DataResource<MessageResource>> create(AuthenticatedUser user,
+      @PathVariable Long chatId, @RequestBody SaveMessage message) {
 
     Message newMessage = new Message();
     newMessage.setChatId(chatId);
     newMessage.setMessage(message.getMessage());
     newMessage.withUserId(user.getUserId());
 
-    return ResponseEntity.status(CREATED)
-        .body(new DataResource<MessageResource>(messageService.save(newMessage), MessageResource::new));
+    return ResponseEntity.status(CREATED).body(
+        new DataResource<MessageResource>(messageService.save(newMessage), MessageResource::new));
   }
 
   @GetMapping
-  public ResponseEntity<Resource> getMessages(@PathVariable Long chatId,
-      Pageable page) {
+  public ResponseEntity<DataListResource> getMessages(@PathVariable Long chatId, Pageable page) {
     // @formatter:off
     return ResponseEntity.ok(
         new DataListResource(

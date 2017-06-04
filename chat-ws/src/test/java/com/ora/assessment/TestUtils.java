@@ -4,6 +4,9 @@ import java.util.Random;
 
 import org.mockito.stubbing.Answer;
 
+import com.ora.assessment.security.AuthenticatedUser;
+import com.ora.assessment.user.User;
+
 public class TestUtils {
 
   public static final long ID = 1L;
@@ -23,5 +26,19 @@ public class TestUtils {
     identifiable.setId(new Random().nextLong());
     return identifiable;
   };
+
+  public static AuthenticatedUser authenticatedUser() {
+    return new AuthenticatedUser(USER_ID, EMAIL, NAME);
+  }
+
+  public static User user() {
+    User user = new User();
+    user.setEmail(EMAIL);
+    user.setId(USER_ID);
+    user.setName(NAME);
+    user.setPassword(PASSWORD);
+    return user;
+  }
+
 
 }

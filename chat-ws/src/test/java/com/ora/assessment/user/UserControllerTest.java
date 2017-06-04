@@ -4,6 +4,7 @@ import static com.ora.assessment.TestUtils.EMAIL;
 import static com.ora.assessment.TestUtils.NAME;
 import static com.ora.assessment.TestUtils.PASSWORD;
 import static com.ora.assessment.TestUtils.USER_ID;
+import static com.ora.assessment.TestUtils.authenticatedUser;
 import static com.ora.assessment.TestUtils.populateId;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -27,7 +28,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
 
 import com.ora.assessment.resource.DataResource;
-import com.ora.assessment.security.AuthenticatedUser;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserControllerTest {
@@ -39,12 +39,8 @@ public class UserControllerTest {
   @Captor
   private ArgumentCaptor<User> userCaptor;
 
-  private AuthenticatedUser authenticatedUser;
-
   @Before
   public void setup() {
-    authenticatedUser = new AuthenticatedUser(USER_ID, EMAIL, NAME);
-
     when(userService.get(anyLong())).thenReturn(existingUser());
   }
 
@@ -71,7 +67,7 @@ public class UserControllerTest {
     when(userService.save(any(), eq(PASSWORD))).then(returnsFirstArg());
 
     final ResponseEntity<DataResource<UserResource>> actualResponse =
-        controller.update(authenticatedUser, saveUser());
+        controller.update(authenticatedUser(), saveUser());
     assertEquals(OK, actualResponse.getStatusCode());
 
     verify(userService).save(userCaptor.capture(), eq(PASSWORD));
@@ -87,7 +83,8 @@ public class UserControllerTest {
 
   @Test
   public void testGet() {
-    final ResponseEntity<DataResource<UserResource>> actualResponse = controller.get(authenticatedUser);
+    final ResponseEntity<DataResource<UserResource>> actualResponse =
+        controller.get(authenticatedUser());
     assertEquals(OK, actualResponse.getStatusCode());
 
     final UserResource actualUserResource = actualResponse.getBody().getData();
