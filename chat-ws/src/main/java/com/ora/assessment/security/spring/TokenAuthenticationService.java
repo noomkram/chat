@@ -42,7 +42,7 @@ public class TokenAuthenticationService {
           .claim("name", userDetails.getName())
           .claim("userId", userDetails.getUserId())
           .setExpiration(new Date(System.currentTimeMillis() + expiration))
-          .signWith(SignatureAlgorithm.HS512, secret.getBytes("UTF-8")) // TODO consider unique key for each user, would need key below as well
+          .signWith(SignatureAlgorithm.HS512, secret.getBytes("UTF-8"))
           .compact();
 
       log.debug("adding header [{}] with value [{} {}]", headerString, tokenPrefix, jwt);
@@ -84,4 +84,5 @@ public class TokenAuthenticationService {
 
     return null;
   }
+
 }
