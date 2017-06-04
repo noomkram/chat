@@ -37,7 +37,7 @@ public class UserDetailsService
   @Getter
   @Setter
   @ToString
-  class AuthenticatedUserDetails extends org.springframework.security.core.userdetails.User {
+  static class AuthenticatedUserDetails extends org.springframework.security.core.userdetails.User {
 
     private static final long serialVersionUID = -3323651285077629959L;
 

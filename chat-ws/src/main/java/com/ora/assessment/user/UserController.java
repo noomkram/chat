@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(value = "/users", consumes = APPLICATION_JSON_VALUE)
 @Slf4j
-public class UserContoller {
+public class UserController {
 
   @Autowired
   private UserService userService;

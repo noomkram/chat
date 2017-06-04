@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TokenAuthenticationService {
 
   @Value("${jwt.expiration}")
-  private long expiration;
+  private long expiration = 30000;
   @Value("${jwt.secret}")
   private String secret = "ThisIsASecret";
   @Value("${jwt.tokenPrefix}")
@@ -48,7 +48,7 @@ public class TokenAuthenticationService {
       log.debug("adding header [{}] with value [{} {}]", headerString, tokenPrefix, jwt);
 
       response.addHeader(headerString, tokenPrefix + " " + jwt);
-    } catch (UnsupportedEncodingException ex) {
+    } catch (Exception ex) {
       log.warn("exception building jwt", ex);
     }
     //@formatter:on

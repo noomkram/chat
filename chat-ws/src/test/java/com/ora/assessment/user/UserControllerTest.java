@@ -30,10 +30,10 @@ import com.ora.assessment.resource.DataResource;
 import com.ora.assessment.security.AuthenticatedUser;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserContollerTest {
+public class UserControllerTest {
 
   @InjectMocks
-  private UserContoller controller;
+  private UserController controller;
   @Mock
   private UserService userService;
   @Captor

@@ -16,7 +16,7 @@ import javax.validation.Path;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
@@ -74,7 +74,6 @@ public class GlobalExceptionHandlersTest {
     assertEquals(GlobalExceptionHandlers.VAILATION_FAILED, actual.getMessage());
     assertEquals(MESSAGE, actual.getErrors().get(PATH).get(0));
   }
-
 
   @Test
   public void testFailedValidationWhenValidationException() {
