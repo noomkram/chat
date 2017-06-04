@@ -4,7 +4,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,19 +38,15 @@ public class MessageController {
         .body(new DataResource<MessageResource>(messageService.save(newMessage), MessageResource::new));
   }
 
-  // TODO remove AuthenticatedUser, not needed
   @GetMapping
-  public ResponseEntity<Resource> getMessages(AuthenticatedUser user, @PathVariable Long chatId,
+  public ResponseEntity<Resource> getMessages(@PathVariable Long chatId,
       Pageable page) {
-    Page<Message> p = messageService.getMessagesForChat(chatId, page);
-
     // @formatter:off
     return ResponseEntity.ok(
         new DataListResource(
-            p.getContent(),
+            messageService.getMessagesForChat(chatId, page),
             MessageResource::new
         )
-        .addMeta("pagination", p)
     );
     // @formatter:on
   }
