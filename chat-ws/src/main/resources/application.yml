@@ -1,8 +1,10 @@
-# TODO externalize param
+datasource:
+  host: 192.168.99.100
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://192.168.99.100:5432/ora-db
+    url: jdbc:postgresql://${datasource.host}:5432/ora-db
     username: system
     password: password
   jpa:
@@ -22,4 +24,3 @@ logging:
     com.ora: DEBUG
     org.springframework: WARN
     org.hibernate: WARN
-    
