@@ -1,6 +1,7 @@
 package com.ora.assessment.user;
 
 import static com.ora.assessment.TestUtils.EMAIL;
+import static com.ora.assessment.TestUtils.MESSAGE;
 import static com.ora.assessment.TestUtils.NAME;
 import static com.ora.assessment.TestUtils.PASSWORD;
 import static com.ora.assessment.TestUtils.USER_ID;
@@ -25,9 +26,12 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 
+import com.ora.assessment.GlobalExceptionHandlers;
 import com.ora.assessment.resource.DataResource;
+import com.ora.assessment.resource.ErrorResource;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserControllerTest {
@@ -93,6 +97,13 @@ public class UserControllerTest {
     verify(userService).get(USER_ID);
   }
 
+  @Test
+  public void testDuplicateEmail() {
+    ErrorResource actual = controller.duplicateEmail(new DataIntegrityViolationException(MESSAGE));
+    assertEquals(GlobalExceptionHandlers.VAILATION_FAILED, actual.getMessage());
+    assertEquals("user with email already exists", actual.getErrors().get("email").get(0));
+  }
+
   private User existingUser() {
     final User u = new User();
     u.setId(USER_ID);
@@ -103,7 +114,7 @@ public class UserControllerTest {
 
   private SaveUser saveUser() {
     final SaveUser saveUser = new SaveUser();
-    saveUser.setConfirmPassword(PASSWORD);
+    saveUser.setPasswordConfirmation(PASSWORD);
     saveUser.setEmail(EMAIL);
     saveUser.setName(NAME);
     saveUser.setPassword(PASSWORD);
