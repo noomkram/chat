@@ -37,7 +37,7 @@ public class GlobalExceptionHandlers {
   }
 
   @ExceptionHandler
-  // TODO status code
+  @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
   public ErrorResource failedValidation(ConstraintViolationException ex) {
     ErrorResource resource = new ErrorResource(VAILATION_FAILED);
     ex.getConstraintViolations()
@@ -46,7 +46,7 @@ public class GlobalExceptionHandlers {
   }
 
   @ExceptionHandler
-  // TODO status code
+  @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
   public ErrorResource failedValidation(ValidationException ex) {
     ErrorResource resource = new ErrorResource(VAILATION_FAILED);
     ex.getErrors().getFieldErrors()
