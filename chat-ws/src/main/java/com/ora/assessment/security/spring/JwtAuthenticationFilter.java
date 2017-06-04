@@ -8,13 +8,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final TokenAuthenticationService tokenAuthenticationService;
 
+  @Autowired
   public JwtAuthenticationFilter(TokenAuthenticationService tokenAuthenticationService) {
     this.tokenAuthenticationService = tokenAuthenticationService;
   }

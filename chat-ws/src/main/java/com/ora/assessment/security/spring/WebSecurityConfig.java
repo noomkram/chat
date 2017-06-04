@@ -30,6 +30,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private PasswordEncoder passwordEncoder;
   @Autowired
   private ObjectMapper mapper;
+  @Autowired
+  private TokenAuthenticationService tokenService;
+  @Autowired
+  private JwtAuthenticationFilter tokenFilter;
 
   @Autowired
   public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder)
@@ -40,17 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public JwtLoginFilter jwtLoginFilter() throws Exception {
-    return new JwtLoginFilter("/auth/login", authenticationManager(), mapper, tokenService());
-  }
-
-  @Bean
-  public TokenAuthenticationService tokenService() {
-    return new TokenAuthenticationService();
-  }
-
-  @Bean
-  public JwtAuthenticationFilter authenticationTokenFilter() throws Exception {
-    return new JwtAuthenticationFilter(tokenService());
+    return new JwtLoginFilter("/auth/login", authenticationManager(), mapper, tokenService);
   }
 
   @Override
@@ -77,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     httpSecurity
       .addFilterBefore(jwtLoginFilter(), UsernamePasswordAuthenticationFilter.class)
-      .addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+      .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
 
     httpSecurity
       .headers()

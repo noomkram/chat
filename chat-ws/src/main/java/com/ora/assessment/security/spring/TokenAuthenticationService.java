@@ -6,7 +6,10 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.ora.assessment.security.AuthenticatedUser;
 import com.ora.assessment.security.spring.UserDetailsService.AuthenticatedUserDetails;
@@ -19,19 +22,16 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+@Service
 @Slf4j
 public class TokenAuthenticationService {
 
-  @Value("${jwt.expiration}")
-  private long expiration = 30000;
-  @Value("${jwt.secret}")
-  private String secret = "ThisIsASecret";
-  @Value("${jwt.tokenPrefix}")
-  private String tokenPrefix = "Bearer";
-  @Value("${jwt.header}")
-  private String headerString = "Authorization";
+  @Autowired
+  private JwtProperties props;
 
   public void addAuthentication(HttpServletResponse response,
       AuthenticatedUserDetails userDetails) {
@@ -41,13 +41,13 @@ public class TokenAuthenticationService {
           .setSubject(userDetails.getUsername()) // email
           .claim("name", userDetails.getName())
           .claim("userId", userDetails.getUserId())
-          .setExpiration(new Date(System.currentTimeMillis() + expiration))
-          .signWith(SignatureAlgorithm.HS512, secret.getBytes("UTF-8"))
+          .setExpiration(new Date(System.currentTimeMillis() + props.getExpiration()))
+          .signWith(SignatureAlgorithm.HS512, props.getSecret().getBytes("UTF-8"))
           .compact();
 
-      log.debug("adding header [{}] with value [{} {}]", headerString, tokenPrefix, jwt);
+      log.debug("adding header [{}] with value [{} {}]", props.getHeader(), props.getTokenPrefix(), jwt);
 
-      response.addHeader(headerString, tokenPrefix + " " + jwt);
+      response.addHeader(props.getHeader(), props.getTokenPrefix() + " " + jwt);
     } catch (Exception ex) {
       log.warn("exception building jwt", ex);
     }
@@ -55,17 +55,17 @@ public class TokenAuthenticationService {
   }
 
   public AuthenticatedUser getAuthentication(HttpServletRequest request) {
-    String jwt = request.getHeader(headerString);
+    String jwt = request.getHeader(props.getHeader());
     if (null == jwt) {
       log.debug("jwt not found");
       return null;
     }
 
-    jwt = jwt.replace(tokenPrefix, "").trim();
+    jwt = jwt.replace(props.getTokenPrefix(), "").trim();
 
     try {
       Jws<Claims> claims =
-          Jwts.parser().setSigningKey(secret.getBytes("UTF-8")).parseClaimsJws(jwt);
+          Jwts.parser().setSigningKey(props.getSecret().getBytes("UTF-8")).parseClaimsJws(jwt);
 
       String email = claims.getBody().getSubject();
       if (null == email) {
@@ -83,6 +83,19 @@ public class TokenAuthenticationService {
     }
 
     return null;
+  }
+
+  @Component
+  @ConfigurationProperties("jwt")
+  @Setter
+  @Getter
+  public static class JwtProperties {
+
+    private String header;
+    private String secret;
+    private String tokenPrefix;
+    private Long expiration;
+
   }
 
 }
