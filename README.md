@@ -30,5 +30,5 @@ docker create -p 8080:8080 --name ora-ws ora-ws
 ```
 to
 ```
-docker create -p 8080:8080 -e datasource.hosts <host IP> --name ora-ws ora-ws
+docker create -p 8080:8080 -e datasource.host <host IP> --name ora-ws ora-ws
 ```
