@@ -28,7 +28,7 @@ public class ChatRepositoryImpl implements CustomChatRepository {
   // @formatter:off
   public static final String GET_CHATS_SQL = "SELECT c.*, m1.*, u.name AS user_name, u.email FROM chats c "
       + "JOIN messages m1 ON (c.chat_id = m1.chat_id) "
-      + "LEFT OUTER JOIN messages m2 ON (c.chat_id = m2.chat_id AND m1.created > m2.created) "
+      + "LEFT OUTER JOIN messages m2 ON (c.chat_id = m2.chat_id AND m1.created < m2.created) "
       + "JOIN chat_users u ON m1.user_id = u.user_id "
       + "WHERE m2.created IS null offset ? limit ?";
 
