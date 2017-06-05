@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ora.assessment.Identifiable;
 import com.ora.assessment.user.User;
 
@@ -35,6 +36,7 @@ public class Message implements Identifiable<Long> {
   private String message;
   @NotNull
   @Column(name = "CHAT_ID")
+  @JsonProperty("chat_id")
   private Long chatId;
   @NotNull
   @OneToOne
@@ -42,6 +44,7 @@ public class Message implements Identifiable<Long> {
   private User user;
   @Temporal(TemporalType.TIMESTAMP)
   @Column(updatable = false)
+  @JsonProperty("created_at")
   private Date created;
 
   @PrePersist
@@ -54,6 +57,11 @@ public class Message implements Identifiable<Long> {
       user = new User();
     }
     user.setId(userId);
+  }
+
+  @JsonProperty("user_id")
+  public Long getUserId() {
+    return null == user ? null : user.getId();
   }
 
 }

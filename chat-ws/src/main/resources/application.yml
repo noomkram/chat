@@ -23,4 +23,5 @@ logging:
   level:
     com.ora: DEBUG
     org.springframework: WARN
+    org.springframework.jdbc.core: TRACE
     org.hibernate: WARN

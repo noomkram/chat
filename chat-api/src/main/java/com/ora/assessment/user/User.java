@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ora.assessment.Identifiable;
 import com.ora.assessment.validation.ValidationGroups.Updating;
 
@@ -34,6 +35,7 @@ public class User implements Identifiable<Long> {
   private String email;
   @NotNull
   @Size(max = 100)
+  @JsonIgnore
   private String password;
 
 }

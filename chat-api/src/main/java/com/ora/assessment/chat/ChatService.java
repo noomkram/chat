@@ -1,6 +1,9 @@
 package com.ora.assessment.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +32,10 @@ public class ChatService {
       return create(chat);
     }
     return update(chat);
+  }
+
+  public Page<Chat> get(Pageable pageable) {
+    return new PageImpl<Chat>(chatRepo.find(pageable), pageable, chatRepo.count());
   }
 
   private Chat create(@Validated(Creating.class) final Chat chat) {
