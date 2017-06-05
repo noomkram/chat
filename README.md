@@ -1,1 +1,27 @@
-# chat
+# Chat
+
+## Prerequisites
+* [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) 
+* [Docker](https://docs.docker.com/docker-for-mac/install/) is installed with a VM using an IP address of 192.168.99.100, see below for configuring the application to run on a different host IP  
+
+## Install
+From the `/chat` directory execute:
+```
+./chat.sh
+```
+
+## API
+The Chat application endpoints are accessible via:
+* http://192.168.99.100:8080/
+
+Endpoint details can be found [here](http://docs.oracodechallenge.apiary.io/#).
+
+### Configuring the host IP
+If the host is running on an IP other than 192.168.99.100, in `/chat-ws/chat-ws.sh change:
+```
+docker create -p 8080:8080 --name ora-ws ora-ws
+```
+to
+```
+docker create -p 8080:8080 -e datasource.hosts <host IP> --name ora-ws ora-ws
+```
