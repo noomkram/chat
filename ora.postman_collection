@@ -1,0 +1,288 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Ora",
+		"_postman_id": "e4e465a8-81d3-af4d-340e-ef0735811132",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create user",
+			"request": {
+				"url": "http://{{host}}:{{port}}/users",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"Mark Moon\",\n  \"email\":\"noomkram@yahoo.com\",\n  \"password\":\"password\",\n  \"password_confirmation\":\"password\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "update user",
+			"request": {
+				"url": "http://{{host}}:{{port}}/users/current",
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJub29ta3JhbUBnbWFpbC5jb20iLCJuYW1lIjoiTWFyayBNb29uIiwidXNlcklkIjoxLCJleHAiOjE0OTY2MzQwODZ9.U3xcXdWCR8DlIVtumt0Q0_6mfwZcpMt0zeXLevHk7VUwvYjDuhrPhsx9MxXGIc5maWsRW8LD-cQUeQA1HfHXZA",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"Mark Moon Sr.\",\n  \"email\":\"noomkram@yahoo.com\",\n  \"password\":\"password\",\n  \"password_confirmation\":\"password\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "create chat",
+			"request": {
+				"url": "http://{{host}}:{{port}}/chats",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJub29ta3JhbUBnbWFpbC5jb20iLCJuYW1lIjoiTWFyayBNb29uIiwidXNlcklkIjoxLCJleHAiOjE0OTY2MzQwODZ9.U3xcXdWCR8DlIVtumt0Q0_6mfwZcpMt0zeXLevHk7VUwvYjDuhrPhsx9MxXGIc5maWsRW8LD-cQUeQA1HfHXZA",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"Welcome\",\n\t\"message\" : \"Welcome to my chat\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get current user",
+			"request": {
+				"url": "http://{{host}}:{{port}}/users/current",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJub29ta3JhbUBnbWFpbC5jb20iLCJuYW1lIjoiTWFyayBNb29uIiwidXNlcklkIjoxLCJleHAiOjE0OTY2MzQwODZ9.U3xcXdWCR8DlIVtumt0Q0_6mfwZcpMt0zeXLevHk7VUwvYjDuhrPhsx9MxXGIc5maWsRW8LD-cQUeQA1HfHXZA",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "update chat",
+			"request": {
+				"url": "http://{{host}}:{{port}}/chats/1",
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJub29ta3JhbUBnbWFpbC5jb20iLCJuYW1lIjoiTWFyayBNb29uIiwidXNlcklkIjoxLCJleHAiOjE0OTY2MzQwODZ9.U3xcXdWCR8DlIVtumt0Q0_6mfwZcpMt0zeXLevHk7VUwvYjDuhrPhsx9MxXGIc5maWsRW8LD-cQUeQA1HfHXZA",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"Let's Chat\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "add message",
+			"request": {
+				"url": "http://{{host}}:{{port}}/chats/1/chat_messages",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJub29ta3JhbUBnbWFpbC5jb20iLCJuYW1lIjoiTWFyayBNb29uIiwidXNlcklkIjoxLCJleHAiOjE0OTY2MzQwODZ9.U3xcXdWCR8DlIVtumt0Q0_6mfwZcpMt0zeXLevHk7VUwvYjDuhrPhsx9MxXGIc5maWsRW8LD-cQUeQA1HfHXZA",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"message\":\"what should we chat about?\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get messages for chat",
+			"request": {
+				"url": {
+					"raw": "http://{{host}}:{{port}}/chats/1/chat_messages?page=1&limit=5",
+					"protocol": "http",
+					"auth": {},
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"chats",
+						"1",
+						"chat_messages"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "limit",
+							"value": "5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJub29ta3JhbUBnbWFpbC5jb20iLCJuYW1lIjoiTWFyayBNb29uIiwidXNlcklkIjoxLCJleHAiOjE0OTY2MzQwODZ9.U3xcXdWCR8DlIVtumt0Q0_6mfwZcpMt0zeXLevHk7VUwvYjDuhrPhsx9MxXGIc5maWsRW8LD-cQUeQA1HfHXZA",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"url": "http://{{host}}:{{port}}/auth/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"noomkram@yahoo.com\",\n\t\"password\":\"password\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get chats",
+			"request": {
+				"url": {
+					"raw": "http://{{host}}:{{port}}/chats?page=1&limit=10",
+					"protocol": "http",
+					"auth": {},
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"chats"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "limit",
+							"value": "10",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJub29ta3JhbUBnbWFpbC5jb20iLCJuYW1lIjoiTWFyayBNb29uIFNyLiIsInVzZXJJZCI6MSwiZXhwIjoxNDk2NjM0NTA4fQ.5AFl4hnoqvNJmKu7-GubyeckNXEMmkdHq7bhtWahUeu0AQQ2nuyF9jffAPaHTacSKqDxsAfsTO6K_gEVz0_w5g",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"url": "http://{{host}}:{{port}}/auth/logout",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJub29ta3JhbUBnbWFpbC5jb20iLCJuYW1lIjoiTWFyayBNb29uIiwidXNlcklkIjoxLCJleHAiOjE0OTY2MzQwODZ9.U3xcXdWCR8DlIVtumt0Q0_6mfwZcpMt0zeXLevHk7VUwvYjDuhrPhsx9MxXGIc5maWsRW8LD-cQUeQA1HfHXZA",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
