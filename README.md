@@ -38,3 +38,9 @@ to
 ```
 docker create -p 8080:8080 -e datasource.host <host IP> --name ora-ws ora-ws
 ```
+
+### Postman
+A sample postman (v2) file can be found at:
+```
+/chat/ora.postman_collection
+```
