@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.ora.assessment.security.AuthenticatedUser;
+import com.ora.assessment.security.spring.TokenAuthenticationService.JwtProperties;
 import com.ora.assessment.security.spring.UserDetailsService.AuthenticatedUserDetails;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -44,7 +45,7 @@ public class TokenAuthenticationServiceTest {
 
   @Before
   public void setup() {
-    service = new TokenAuthenticationService();
+    service = new TokenAuthenticationService(props());
     user = new AuthenticatedUserDetails(USER_ID, EMAIL, NAME, PASSWORD);
 
     doNothing().when(response).addHeader(any(), any());
@@ -85,7 +86,9 @@ public class TokenAuthenticationServiceTest {
 
   @Test
   public void testGetAuthenticationWhenTokenExpired() {
-    setField(service, "expiration", 0);
+    JwtProperties props = props();
+    props.setExpiration(0L);
+    service = new TokenAuthenticationService(props);
 
     final String token = getToken();
     when(request.getHeader("Authorization")).thenReturn(token);
@@ -108,6 +111,15 @@ public class TokenAuthenticationServiceTest {
 
     verify(response).addHeader(eq("Authorization"), tokenCaptor.capture());
     return tokenCaptor.getValue().replace("Bearer ", "");
+  }
+
+  private JwtProperties props() {
+    final JwtProperties props = new JwtProperties();
+    props.setExpiration(1000L);
+    props.setHeader("Authorization");
+    props.setSecret("secret");
+    props.setTokenPrefix("Bearer");
+    return props;
   }
 
 }

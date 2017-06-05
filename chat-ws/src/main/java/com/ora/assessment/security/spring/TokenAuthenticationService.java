@@ -30,8 +30,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TokenAuthenticationService {
 
+  private final JwtProperties props;
+
   @Autowired
-  private JwtProperties props;
+  public TokenAuthenticationService(JwtProperties props) {
+    this.props = props;
+  }
 
   public void addAuthentication(HttpServletResponse response,
       AuthenticatedUserDetails userDetails) {
