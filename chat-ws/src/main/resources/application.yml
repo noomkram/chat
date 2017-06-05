@@ -17,7 +17,7 @@ jwt:
   header: Authorization
   secret: theSauceIsTheBoss
   tokenPrefix: Bearer
-  expiration: 600000
+  expiration: 3600000
 
 logging:
   level:

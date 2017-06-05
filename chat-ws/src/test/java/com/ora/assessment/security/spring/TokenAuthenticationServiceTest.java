@@ -4,6 +4,7 @@ import static com.ora.assessment.TestUtils.EMAIL;
 import static com.ora.assessment.TestUtils.NAME;
 import static com.ora.assessment.TestUtils.PASSWORD;
 import static com.ora.assessment.TestUtils.USER_ID;
+import static com.ora.assessment.TestUtils.token;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,6 +28,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.ora.assessment.security.AuthenticatedUser;
+import com.ora.assessment.security.Token;
+import com.ora.assessment.security.TokenRepository;
 import com.ora.assessment.security.spring.TokenAuthenticationService.JwtProperties;
 import com.ora.assessment.security.spring.UserDetailsService.AuthenticatedUserDetails;
 
@@ -35,20 +38,25 @@ public class TokenAuthenticationServiceTest {
 
   private TokenAuthenticationService service;
   private AuthenticatedUserDetails user;
+  @Mock
+  private TokenRepository tokenRepo;
 
   @Mock
   private HttpServletRequest request;
   @Mock
   private HttpServletResponse response;
   @Captor
-  private ArgumentCaptor<String> tokenCaptor;
+  private ArgumentCaptor<String> jwtCaptor;
+  @Captor
+  private ArgumentCaptor<Token> tokenCaptor;
 
   @Before
   public void setup() {
-    service = new TokenAuthenticationService(props());
+    service = new TokenAuthenticationService(props(), tokenRepo);
     user = new AuthenticatedUserDetails(USER_ID, EMAIL, NAME, PASSWORD);
 
     doNothing().when(response).addHeader(any(), any());
+    when(tokenRepo.findByToken(any())).thenReturn(null);
   }
 
   @Test
@@ -86,12 +94,20 @@ public class TokenAuthenticationServiceTest {
 
   @Test
   public void testGetAuthenticationWhenTokenExpired() {
-    JwtProperties props = props();
-    props.setExpiration(0L);
-    service = new TokenAuthenticationService(props);
+    prepareExpiredTokenService();
 
     final String token = getToken();
     when(request.getHeader("Authorization")).thenReturn(token);
+
+    final AuthenticatedUser actual = service.getAuthentication(request);
+    assertNull(actual);
+  }
+
+  @Test
+  public void testGetAuthenticationWhenTokenInvalidated() {
+    final String token = getToken();
+    when(request.getHeader("Authorization")).thenReturn(token);
+    when(tokenRepo.findByToken(any())).thenReturn(token());
 
     final AuthenticatedUser actual = service.getAuthentication(request);
     assertNull(actual);
@@ -106,20 +122,68 @@ public class TokenAuthenticationServiceTest {
     assertEquals(USER_ID, actual.getUserId().longValue());
   }
 
+  @Test
+  public void testInvalidateWhenSubjectNotFound() {
+    setField(user, "username", null);
+    final String token = getToken();
+    when(request.getHeader("Authorization")).thenReturn(token);
+
+    service.invalidate(request);
+
+    verify(tokenRepo, never()).save(any(Token.class));
+  }
+
+  @Test
+  public void testInvalidateWhenHeaderNotFound() {
+    when(request.getHeader("Authorization")).thenReturn(null);
+
+    service.invalidate(request);
+
+    verify(tokenRepo, never()).save(any(Token.class));
+  }
+
+  @Test
+  public void testInvalidateWhenTokenExpired() {
+    prepareExpiredTokenService();
+
+    service.invalidate(request);
+
+    verify(tokenRepo, never()).save(any(Token.class));
+  }
+
+  @Test
+  public void testInvalidate() {
+    final String token = getToken();
+    when(request.getHeader("Authorization")).thenReturn(token);
+
+    service.invalidate(request);
+
+    verify(tokenRepo).save(tokenCaptor.capture());
+
+    Token actual = tokenCaptor.getValue();
+    assertEquals(token, actual.getToken());
+  }
+
   private String getToken() {
     service.addAuthentication(response, user);
 
-    verify(response).addHeader(eq("Authorization"), tokenCaptor.capture());
-    return tokenCaptor.getValue().replace("Bearer ", "");
+    verify(response).addHeader(eq("Authorization"), jwtCaptor.capture());
+    return jwtCaptor.getValue().replace("Bearer ", "");
   }
 
   private JwtProperties props() {
     final JwtProperties props = new JwtProperties();
-    props.setExpiration(1000L);
+    props.setExpiration(10000L);
     props.setHeader("Authorization");
     props.setSecret("secret");
     props.setTokenPrefix("Bearer");
     return props;
+  }
+
+  private void prepareExpiredTokenService() {
+    JwtProperties props = props();
+    props.setExpiration(0L);
+    service = new TokenAuthenticationService(props, tokenRepo);
   }
 
 }

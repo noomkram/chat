@@ -1,9 +1,13 @@
 package com.ora.assessment.chat;
 
 import static com.ora.assessment.TestUtils.CHAT_ID;
+import static com.ora.assessment.TestUtils.MESSAGE;
+import static com.ora.assessment.TestUtils.NAME;
 import static com.ora.assessment.TestUtils.USER_ID;
+import static com.ora.assessment.TestUtils.pageable;
 import static com.ora.assessment.TestUtils.populateId;
 import static com.ora.assessment.TestUtils.user;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
 
 import com.ora.assessment.NotFoundException;
 import com.ora.assessment.chat.message.Message;
@@ -32,8 +37,7 @@ import com.ora.assessment.user.UserService;
 @RunWith(MockitoJUnitRunner.class)
 public class ChatServiceTest {
 
-  public static final String NAME = "NAME";
-  public static final String MESSAGE = "MESSAGE";
+  public static final long TOTAL = 1;
 
   @InjectMocks
   private ChatService service;
@@ -48,6 +52,8 @@ public class ChatServiceTest {
   public void setup() {
     when(chatRepo.save(any(Chat.class))).then(populateId);
     when(chatRepo.findOne(anyLong())).thenReturn(chatToUpdate());
+    when(chatRepo.count()).thenReturn(TOTAL);
+    when(chatRepo.find(any())).thenReturn(asList(new Chat()));
     when(messageService.save(any(Message.class))).then(populateId);
     when(messageService.getLastMessageForChat(anyLong())).thenReturn(newMessage());
     when(userService.getUsersInChat(anyLong())).thenReturn(singleton(user()));
@@ -108,6 +114,15 @@ public class ChatServiceTest {
 
     verify(messageService).getLastMessageForChat(CHAT_ID);
     verify(userService).getUsersInChat(CHAT_ID);
+  }
+
+  @Test
+  public void testGet() {
+    Page<Chat> actual = service.get(pageable());
+    assertNotNull(actual.getContent());
+    assertEquals(TOTAL, actual.getTotalElements());
+
+    verify(chatRepo).find(pageable());
   }
 
   private Chat chatToCreate() {

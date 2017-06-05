@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.ora.assessment.security.AuthenticatedUser;
+import com.ora.assessment.security.Token;
+import com.ora.assessment.security.TokenRepository;
 import com.ora.assessment.security.spring.UserDetailsService.AuthenticatedUserDetails;
 
 import io.jsonwebtoken.Claims;
@@ -31,21 +33,25 @@ import lombok.extern.slf4j.Slf4j;
 public class TokenAuthenticationService {
 
   private final JwtProperties props;
+  private final TokenRepository tokenRepo;
 
   @Autowired
-  public TokenAuthenticationService(JwtProperties props) {
+  public TokenAuthenticationService(JwtProperties props, TokenRepository tokenRepo) {
     this.props = props;
+    this.tokenRepo = tokenRepo;
   }
 
   public void addAuthentication(HttpServletResponse response,
       AuthenticatedUserDetails userDetails) {
     //@formatter:off
     try {
-      String jwt = Jwts.builder()
+      final Date expires = new Date(System.currentTimeMillis() + props.getExpiration());
+
+      final String jwt = Jwts.builder()
           .setSubject(userDetails.getUsername()) // email
           .claim("name", userDetails.getName())
           .claim("userId", userDetails.getUserId())
-          .setExpiration(new Date(System.currentTimeMillis() + props.getExpiration()))
+          .setExpiration(expires)
           .signWith(SignatureAlgorithm.HS512, props.getSecret().getBytes("UTF-8"))
           .compact();
 
@@ -59,28 +65,81 @@ public class TokenAuthenticationService {
   }
 
   public AuthenticatedUser getAuthentication(HttpServletRequest request) {
-    String jwt = request.getHeader(props.getHeader());
+    try {
+      final String jwt = getToken(request);
+      if (null == jwt) {
+        return null;
+      }
+
+      final Jws<Claims> claims = getClaims(jwt);
+      if (null == claims) {
+        return null;
+      }
+
+      final String email = claims.getBody().getSubject();
+      final Long userId = Long.valueOf(claims.getBody().get("userId").toString());
+      final String name = claims.getBody().get("name").toString();
+
+      Token token = tokenRepo.findByToken(jwt);
+      if (null != token) {
+        log.debug("user [{}] logged out with this token [{}]", email, jwt);
+        return null;
+      }
+
+      return new AuthenticatedUser(userId, email, name);
+    } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException
+        | SignatureException | IllegalArgumentException ex) {
+      log.warn("exception [{}] parsing jwt", ex.getClass(), ex);
+    }
+
+    return null;
+  }
+
+  public void invalidate(HttpServletRequest request) {
+    try {
+      final String jwt = getToken(request);
+      if (null == jwt) {
+        return;
+      }
+
+      final Jws<Claims> claims = getClaims(jwt);
+      if (null == claims) {
+        return;
+      }
+
+      final Token token = new Token();
+      token.setToken(jwt);
+      token.setExpires(claims.getBody().getExpiration());
+      tokenRepo.save(token);
+
+    } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException
+        | SignatureException | IllegalArgumentException ex) {
+      log.warn("exception [{}] parsing jwt", ex.getClass(), ex);
+    }
+  }
+
+  private String getToken(HttpServletRequest request) {
+    final String jwt = request.getHeader(props.getHeader());
     if (null == jwt) {
       log.debug("jwt not found");
       return null;
     }
 
-    jwt = jwt.replace(props.getTokenPrefix(), "").trim();
+    return jwt.replace(props.getTokenPrefix(), "").trim();
+  }
 
+  private Jws<Claims> getClaims(String jwt) {
     try {
-      Jws<Claims> claims =
+      final Jws<Claims> claims =
           Jwts.parser().setSigningKey(props.getSecret().getBytes("UTF-8")).parseClaimsJws(jwt);
 
-      String email = claims.getBody().getSubject();
+      final String email = claims.getBody().getSubject();
       if (null == email) {
         log.warn("subject (email) not found in jwt [{}]", jwt);
         return null;
       }
 
-      Long userId = Long.valueOf(claims.getBody().get("userId").toString());
-      String name = claims.getBody().get("name").toString();
-
-      return new AuthenticatedUser(userId, email, name);
+      return claims;
     } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException
         | SignatureException | IllegalArgumentException | UnsupportedEncodingException ex) {
       log.warn("exception [{}] parsing jwt", ex.getClass(), ex);
@@ -88,6 +147,7 @@ public class TokenAuthenticationService {
 
     return null;
   }
+
 
   @Component
   @ConfigurationProperties("jwt")

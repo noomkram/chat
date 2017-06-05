@@ -5,6 +5,7 @@ import java.util.Random;
 import org.mockito.stubbing.Answer;
 
 import com.ora.assessment.security.AuthenticatedUser;
+import com.ora.assessment.security.Token;
 import com.ora.assessment.user.User;
 
 public class TestUtils {
@@ -19,6 +20,7 @@ public class TestUtils {
   public static final String ENCODED_PASSWORD = "ENCODED_PASSWORD";
   public static final String NAME = "NAME";
   public static final String MESSAGE = "MESSAGE";
+  public static final String TOKEN = "TOKEN";
 
   @SuppressWarnings("unchecked")
   public static Answer<Identifiable<Long>> populateId = invocation -> {
@@ -40,5 +42,10 @@ public class TestUtils {
     return user;
   }
 
+  public static Token token() {
+    Token t = new Token();
+    t.setToken(TOKEN);
+    return t;
+  }
 
 }
