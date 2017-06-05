@@ -23,6 +23,12 @@ The Chat application endpoints are accessible via:
 
 Endpoint details can be found [here](http://docs.oracodechallenge.apiary.io/#).
 
+### Logs
+The application logs can be viewed via:
+```
+docker logs -f ora-ws 
+```
+
 ### Configuring the host IP
 If the host is running on an IP other than 192.168.99.100, in `/chat-ws/chat-ws.sh` change:
 ```
